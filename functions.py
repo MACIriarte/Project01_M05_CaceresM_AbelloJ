@@ -9,7 +9,7 @@ Se recibe una lista con los id’s de la baraja (mazo), se mezclan, se reparte u
 cada jugador, se ordenan la lista de jugadores de la partida (contextGame[“game”])
 según la carta que han recibido, y se establecen las prioridades."""
 
- # def resetPoints():
+# def resetPoints():
 """Función que establece los 20 puntos iniciales en todos los jugadores."""
 
 # def fill_player_game(player_game,gameID,*fields):
@@ -223,5 +223,4 @@ player_id | earnings | games_played | minutes_played."""
 # def returnListRanking(field="earnings"):
 """Función que retorna una lista con los id de jugadores del diccionario que retorna la función
 getBBDDRanking(), ordenados según la opción del ranking elegida"""
-
 

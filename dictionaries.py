@@ -79,5 +79,5 @@ la actual ronda”,endind_round_points:”puntos al final de la ronda”},...,{i
 {is_bank:”0 ó 1”,bet_points:”apuesta en la ronda”,starting_round_points:”puntos al inicio de la
 partida,cards_value:”puntos obtenido en la actual ronda”,endind_round_points:”puntos al
 final de la ronda”}
-""
+"""
 
