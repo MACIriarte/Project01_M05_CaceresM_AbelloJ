@@ -1,6 +1,7 @@
 from dictionaries import *
 
-def addPlayers():
+
+def addplayers():
     while True:
         answer = input("The new player is human? Y/y or N/n\nOption: ")
         while not answer or (answer.lower() != "y" or answer.lower() != "n"):
@@ -188,7 +189,7 @@ usuario."""
     cards C07
     roundPoints 0
 """
-    
+
 # def logToFile(text):
 """Esta función nos puede servir para enviar mensajes de texto al archivo
 “logFileSevenAndHalf”, que puede sernos útil a modo de debug.
