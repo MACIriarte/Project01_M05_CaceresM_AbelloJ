@@ -1,3 +1,5 @@
+from dictionaries import *
+
 # def playGame():
 """Esta es la función principal del proyecto. Una vez establecido el número de rondas, la baraja
 con la que se va a jugar, y los jugadores que participan en la partida, ésta será la función
@@ -177,7 +179,7 @@ diccionario contextGame, contextGame[“maxRounds”]"""
 # def setNewPlayer(human=True):
 """Función que gestiona la creación de un nuevo jugador que insertaremos en la BBDD"""
 
-# def showhPlayersGame():
+# def showPlayersGame():
 """Función que muestra los jugadores seleccionados cuando estamos añadiendo jugadores a la
 partida:
 ********************Actual Players In Game********************
@@ -223,4 +225,3 @@ player_id | earnings | games_played | minutes_played."""
 # def returnListRanking(field="earnings"):
 """Función que retorna una lista con los id de jugadores del diccionario que retorna la función
 getBBDDRanking(), ordenados según la opción del ranking elegida"""
-
