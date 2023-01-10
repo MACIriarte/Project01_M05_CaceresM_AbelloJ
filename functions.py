@@ -1,5 +1,55 @@
 from dictionaries import *
 
+def addPlayers():
+    while True:
+        answer = input("The new player is human? Y/y or N/n\nOption: ")
+        while not answer or (answer.lower() != "y" or answer.lower() != "n"):
+            answer = input("The new player is human? Y/y or N/n\nOption: ")
+        new_player_name = input("New player name: ")
+        new_player_name.split()
+
+        while not new_player_name:
+            new_player_name = input("New player name: ")
+            new_player_name.split()
+
+        new_player_behaviour = input("Choose new player behaviour:\n1)Cautious\n2)Moderated\n3)Bold\nOption: ")
+        while new_player_behaviour != (1 or 2 or 3):
+            print("Choose an option between 1, 2 or 3!")
+            input("Press any key to continue")
+            new_player_behaviour = input("Choose new player behaviour:\n1)Cautious\n2)Moderated\n3)Bold\nOption: ")
+        if new_player_behaviour == 1:
+            new_player_behaviour = "cautious"
+        elif new_player_behaviour == 2:
+            new_player_behaviour = "moderated"
+        elif new_player_behaviour == 3:
+            new_player_behaviour = "bold"
+
+        if answer.lower() == "y":
+            correct_id = False
+            while not correct_id:
+                new_player_id = input("New player NIF: ")
+                while not new_player_id[:8].isdigit() and new_player_id[8:9].isalpha():
+                    input("The first eight characters needs to be only numbers and the last a letter!"
+                          "\nPress any key to continue")
+                    new_player_id = input("New player NIF: ")
+                if new_player_id in stored_players["humans"]:
+                    input("This NIF already exists!\nPress any key to continue")
+                    new_player_id = input("New player NIF: ")
+                correct_id = True
+            answer1 = input("Do you want to add this player? Y/y or N/n")
+            while not answer1 or (answer1.lower() != "y" or answer1.lower() != "n"):
+                answer1 = input("Do you want to add this player? Y/y or N/n")
+            if answer1.lower() == "y":
+                # add stored_players = {"humans":{new_player_id:{"name":new_player_name,"behaviour":new_player_behaviour,"earnings":0,"games":0,"minutes":0}}}
+                print("")
+
+        elif answer.lower() == "n":
+            new_player_id = input("New bot ID: ")
+            while new_player_id in stored_players["robots"]:
+                input("This ID already exists!\nPress any key to continue")
+                new_player_id = input("New bot ID: ")
+
+
 # def playGame():
 """Esta es la función principal del proyecto. Una vez establecido el número de rondas, la baraja
 con la que se va a jugar, y los jugadores que participan en la partida, ésta será la función
