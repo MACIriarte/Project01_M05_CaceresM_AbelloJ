@@ -14,7 +14,7 @@ def addplayers():
             new_player_name.split()
 
         new_player_behaviour = input("Choose new player behaviour:\n1)Cautious\n2)Moderated\n3)Bold\nOption: ")
-        while new_player_behaviour != (1 or 2 or 3):
+        while new_player_behaviour not in [1, 2, 3]:
             print("Choose an option between 1, 2 or 3!")
             input("Press any key to continue")
             new_player_behaviour = input("Choose new player behaviour:\n1)Cautious\n2)Moderated\n3)Bold\nOption: ")
@@ -41,14 +41,80 @@ def addplayers():
             while not answer1 or (answer1.lower() != "y" or answer1.lower() != "n"):
                 answer1 = input("Do you want to add this player? Y/y or N/n")
             if answer1.lower() == "y":
-                # add stored_players = {"humans":{new_player_id:{"name":new_player_name,"behaviour":new_player_behaviour,"earnings":0,"games":0,"minutes":0}}}
-                print("")
+                stored_players["humans"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
+                                                           "earnings": 0, "games": 0, "minutes": 0}
+                input("Player added successfully!\nPress any key to continue")
+            elif answer1.lower() == "n":
+                input("Player successfully not added!\nPress any key to continue")
 
         elif answer.lower() == "n":
             new_player_id = input("New bot ID: ")
-            while new_player_id in stored_players["robots"]:
+            while new_player_id in stored_players["boots"]:
                 input("This ID already exists!\nPress any key to continue")
                 new_player_id = input("New bot ID: ")
+            answer2 = input("Do you want to add this player? Y/y or N/n")
+            while not answer2 or (answer2.lower() == "y" or answer2.lower() == "n"):
+                answer2 = input("Do you want to add this player? Y/y or N/n")
+            if answer2.lower() == "y":
+                stored_players["boots"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
+                                                           "earnings": 0, "games": 0, "minutes": 0}
+            elif answer2.lower() == "n":
+                input("Boot successfully not added!\nPress any key to continue")
+        return
+
+
+def addplayers2():
+    while True:
+        answer = input("The new player is human? Y/n\nOption: ").lower()
+        while answer not in ["y", "n"]:
+            answer = input("Invalid input. The new player is human? Y/n\nOption: ").lower()
+
+        new_player_name = input("New player name: ").strip()
+        while not new_player_name:
+            new_player_name = input("Invalid input. New player name: ").strip()
+
+        new_player_behaviour = input("Choose new player behaviour:\n1) Cautious\n2) Moderated\n3) Bold\nOption: ")
+        while new_player_behaviour not in ["1", "2", "3"]:
+            print("Invalid input. Choose an option between 1, 2, or 3.")
+            new_player_behaviour = input("Choose new player behaviour:\n1) Cautious\n2) Moderated\n3) Bold\nOption: ")
+
+        new_player_behaviour = ["cautious", "moderated", "bold"][int(new_player_behaviour) - 1]
+
+        if answer == "y":
+            while True:
+                new_player_id = input("New player NIF: ")
+                if not new_player_id[:8].isdigit() or not new_player_id[8:9].isalpha():
+                    print(
+                        "Invalid input. The first eight characters need to be only numbers and the last one a letter.")
+                elif new_player_id in stored_players["humans"]:
+                    print("This NIF already exists!")
+                else:
+                    break
+            answer1 = input("Do you want to add this player? Y/n\nOption: ").lower()
+            while answer1 not in ["y", "n"]:
+                answer1 = input("Invalid input. Do you want to add this player? Y/n\nOption: ").lower()
+
+            if answer1 == "y":
+                stored_players["humans"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
+                                                           "earnings": 0, "games": 0, "minutes": 0}
+                print("Player added successfully!")
+            else:
+                print("Player not added.")
+
+        elif answer == "n":
+            while True:
+                new_player_id = input("New bot ID: ")
+                if new_player_id in stored_players["boots"]:
+                    print("This ID already exists!")
+                else:
+                    break
+            answer2 = input("Do you want to add this player? Y/n\nOption: ").lower()
+            while answer2 not in ["y", "n"]:
+                answer2 = input("Invalid input. Do you want to add this player? Y/n\nOption: ").lower()
+
+            if answer2 == "y":
+                stored_players["boots"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
+                                                          "earnings": 0, "games": 0, "minutes": 0}
 
 
 # def playGame():
