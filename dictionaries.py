@@ -43,6 +43,11 @@ spn_cards = {
     "B12": {"cardname": "Rey de Bastos", "value": 12, "priority": 1, "realValue": 0.5},
 }
 
+# english deck, priority diamonds 4, hearts 3, picas 2, trebol 1
+eng_cards = {
+    "D01": {"cardname": "As de diamantes", "value": 1, "priority": 1, "realvalue": 1},
+}
+
 stored_players = {
     "humans": {"12345678A": {"name": "Mario", "behaviour": "cautious", "earnings": 0, "games": 0, "minutes": 0},
                "12345678F": {"name": "Pedro", "behaviour": "moderated", "earnings": 0, "games": 0, "minutes": 0},
@@ -61,6 +66,12 @@ players = {"11115555A":
                {"name": "Pedro", "human": True, "bank": False, "initialCard": "", "priority": 0, "type": 40, "bet": 4,
                 "points": 0, "cards": [], "roundPoints": 0},
            }
+
+game_settings = {
+    "default": {"roundlimit":{"active":True,"rounds":5},"deck":{"spanish":True,"english":False}},
+
+    "custom": {"roundlimit":{"active":False,"rounds":0},"deck":{"spanish":True,"english":False}}
+}
 
 # Crearemos una lista, por ejemplo game=[], donde tendremos los NIF de todos los jugadores
 # que participen en la partida en cada momento.

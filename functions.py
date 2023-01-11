@@ -137,7 +137,7 @@ def delplayer():
             answer = input("The player you want to delete is human? y/n\nOption: ")
         if answer.lower() == "y":
             option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
-            while option not in [1, 2, 3]:
+            while option not in ["1","2","3"]:
                 input("Choose an option between 1, 2 or 3!\nPress any key to continue")
                 option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
             if option == 1:
@@ -184,7 +184,7 @@ def delplayer():
 
         if answer.lower() == "n":
             option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
-            while option not in [1, 2, 3]:
+            while option not in ["1","2","3"]:
                 input("Choose an option between 1, 2 or 3!\nPress any key to continue")
                 option = input("1)Find by ID\n2)Find by name\n3)Exit\nOption: ")
 
