@@ -1,11 +1,12 @@
 from dictionaries import *
 
 
-def addplayers():
+def addplayer():
     while True:
         answer = input("The new player is human? Y/y or N/n\nOption: ")
         while not answer or (answer.lower() != "y" or answer.lower() != "n"):
             answer = input("The new player is human? Y/y or N/n\nOption: ")
+
         new_player_name = input("New player name: ")
         new_player_name.split()
 
@@ -18,32 +19,40 @@ def addplayers():
             print("Choose an option between 1, 2 or 3!")
             input("Press any key to continue")
             new_player_behaviour = input("Choose new player behaviour:\n1)Cautious\n2)Moderated\n3)Bold\nOption: ")
+
         if new_player_behaviour == 1:
             new_player_behaviour = "cautious"
+
         elif new_player_behaviour == 2:
             new_player_behaviour = "moderated"
+
         elif new_player_behaviour == 3:
             new_player_behaviour = "bold"
 
         if answer.lower() == "y":
+            new_player_id = input("New player NIF: ")
+
             correct_id = False
             while not correct_id:
-                new_player_id = input("New player NIF: ")
                 while not new_player_id[:8].isdigit() and new_player_id[8:9].isalpha():
                     input("The first eight characters needs to be only numbers and the last a letter!"
                           "\nPress any key to continue")
                     new_player_id = input("New player NIF: ")
+
                 if new_player_id in stored_players["humans"]:
                     input("This NIF already exists!\nPress any key to continue")
                     new_player_id = input("New player NIF: ")
                 correct_id = True
+
             answer1 = input("Do you want to add this player? Y/y or N/n")
             while not answer1 or (answer1.lower() != "y" or answer1.lower() != "n"):
                 answer1 = input("Do you want to add this player? Y/y or N/n")
+
             if answer1.lower() == "y":
                 stored_players["humans"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
                                                            "earnings": 0, "games": 0, "minutes": 0}
                 input("Player added successfully!\nPress any key to continue")
+
             elif answer1.lower() == "n":
                 input("Player successfully not added!\nPress any key to continue")
 
@@ -57,13 +66,13 @@ def addplayers():
                 answer2 = input("Do you want to add this player? Y/y or N/n")
             if answer2.lower() == "y":
                 stored_players["boots"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
-                                                           "earnings": 0, "games": 0, "minutes": 0}
+                                                          "earnings": 0, "games": 0, "minutes": 0}
             elif answer2.lower() == "n":
                 input("Boot successfully not added!\nPress any key to continue")
         return
 
 
-def addplayers2():
+def addplayer2():
     while True:
         answer = input("The new player is human? Y/n\nOption: ").lower()
         while answer not in ["y", "n"]:
@@ -90,6 +99,7 @@ def addplayers2():
                     print("This NIF already exists!")
                 else:
                     break
+
             answer1 = input("Do you want to add this player? Y/n\nOption: ").lower()
             while answer1 not in ["y", "n"]:
                 answer1 = input("Invalid input. Do you want to add this player? Y/n\nOption: ").lower()
@@ -108,6 +118,7 @@ def addplayers2():
                     print("This ID already exists!")
                 else:
                     break
+
             answer2 = input("Do you want to add this player? Y/n\nOption: ").lower()
             while answer2 not in ["y", "n"]:
                 answer2 = input("Invalid input. Do you want to add this player? Y/n\nOption: ").lower()
@@ -115,6 +126,104 @@ def addplayers2():
             if answer2 == "y":
                 stored_players["boots"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
                                                           "earnings": 0, "games": 0, "minutes": 0}
+        return
+
+
+def delplayer():
+    while True:
+        answer = input("The player you want to delete is human? y/n\nOption: ")
+        while not answer.lower() == "y" or answer.lower() == "n":
+            input("Pleas choose an option between y or n!\nPress any key to continue")
+            answer = input("The player you want to delete is human? y/n\nOption: ")
+        if answer.lower() == "y":
+            option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
+            while option not in [1, 2, 3]:
+                input("Choose an option between 1, 2 or 3!\nPress any key to continue")
+                option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
+            if option == 1:
+                while True:
+                    search_nif = input("NIF to search: ")
+                    while search_nif[:8].isdigit() and search_nif[8:9].isalpha():
+                        input("The first eight characters needs to be only numbers and the last a letter!"
+                              "\nPress any key to continue")
+                        search_nif = input("NIF to search: ")
+                    while search_nif not in stored_players["humans"]:
+                        input("This NIF does not exist, please make sure is the right one!\nPress any key to continue")
+                        search_nif = input("NIF to search: ")
+
+                    answer = input("Are you sure you want to delete this player? y/n")
+                    while not answer == "y" and answer == "n":
+                        input("Choose an option between y/n!\nPress any key to continue")
+                        answer = input("Are you sure you want to delete this player? y/n")
+                    if answer.lower() == "y":
+                        # look with search_nif in stored_players["humans"][search_nif] and delete all content
+                        print()
+                    elif answer.lower() == "n":
+                        input("Player successfully not deleted!\nPress any key to continue")
+                    break
+            if option == 2:
+                while True:
+                    search_name = input("Name to search: ")
+                    search_name = search_name.split()
+                    while not search_name:
+                        input("The name given must not be empty!\nPress any key to continue")
+                        search_name = input("Name to search: ")
+                    while search_name not in stored_players:
+                        input("This name does not exist, please make sure is the right one!\nPress any key to continue")
+                        search_name = input("Name to search: ")
+                    answer = input("Are you sure you want to delete this boot? y/n")
+                    while not answer == "y" and answer == "n":
+                        input("Choose an option between y/n!\nPress any key to continue")
+                        answer = input("Are you sure you want to delete this player? y/n")
+                    if answer.lower() == "y":
+                        # look with search_id in stored_players["humans"][key][search_name] and delete all content
+                        print()
+                    elif answer.lower() == "n":
+                        input("Player successfully not deleted!\nPress any key to continue")
+                    break
+
+        if answer.lower() == "n":
+            option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
+            while option not in [1, 2, 3]:
+                input("Choose an option between 1, 2 or 3!\nPress any key to continue")
+                option = input("1)Find by ID\n2)Find by name\n3)Exit\nOption: ")
+
+            if option == 1:
+                search_id = input("ID to search: ")
+                while search_id not in stored_players["boots"]:
+                    input("This ID does not exist, please make sure is the right one!\nPress any key to continue")
+                    search_id = input("ID to search: ")
+                answer = input("Are you sure you want to delete this boot? y/n")
+                while not answer == "y" and answer == "n":
+                    input("Choose an option between y/n!\nPress any key to continue")
+                    answer = input("Are you sure you want to delete this player? y/n")
+                if answer.lower() == "y":
+                    # look with search_id in stored_players["boots"][search_id] and delete all content
+                    print()
+                elif answer.lower() == "n":
+                    input("Player successfully not deleted!\nPress any key to continue")
+                break
+
+            if option == 2:
+                while True:
+                    search_name = input("Name to search: ")
+                    search_name = search_name.split()
+                    while not search_name:
+                        input("The name given must not be empty!\nPress any key to continue")
+                        search_name = input("Name to search: ")
+                    while search_name not in stored_players:
+                        input("This name does not exist, please make sure is the right one!\nPress any key to continue")
+                        search_name = input("Name to search: ")
+                    answer = input("Are you sure you want to delete this boot? y/n")
+                    while not answer == "y" and answer == "n":
+                        input("Choose an option between y/n!\nPress any key to continue")
+                        answer = input("Are you sure you want to delete this boot? y/n")
+                    if answer.lower() == "y":
+                        # look with search_id in stored_players["boots"][key][search_name] and delete all content
+                        print()
+                    elif answer.lower() == "n":
+                        input("Boot successfully not deleted!\nPress any key to continue")
+                    break
 
 
 # def playGame():
