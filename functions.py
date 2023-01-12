@@ -229,6 +229,10 @@ def delplayer():
                     break
 
 
+def setplayers():
+
+
+
 # def playGame():
 """Esta es la función principal del proyecto. Una vez establecido el número de rondas, la baraja
 con la que se va a jugar, y los jugadores que participan en la partida, ésta será la función
