@@ -43,9 +43,47 @@ spn_cards = {
     "B12": {"cardname": "Rey de Bastos", "value": 12, "priority": 1, "realValue": 0.5},
 }
 
-# english deck, priority diamonds 4, hearts 3, picas 2, trebol 1
 eng_cards = {
-    "D01": {"cardname": "As de diamantes", "value": 1, "priority": 1, "realvalue": 1},
+    "D01": {"cardname": "Ace of diamonds", "value": 1, "priority": 4, "realvalue": 1},
+    "D02": {"cardname": "Two of diamonds", "value": 2, "priority": 4, "realvalue": 2},
+    "D03": {"cardname": "Three of diamonds", "value": 3, "priority": 4, "realvalue": 3},
+    "D04": {"cardname": "Four of diamonds", "value": 4, "priority": 4, "realvalue": 4},
+    "D05": {"cardname": "Five of diamonds", "value": 5, "priority": 4, "realvalue": 5},
+    "D06": {"cardname": "Six of diamonds", "value": 6, "priority": 4, "realvalue": 6},
+    "D07": {"cardname": "Seven of diamonds", "value": 7, "priority": 4, "realvalue": 7},
+    "D11": {"cardname": "Jack of diamonds", "value": 11, "priority": 4, "realvalue": 0.5},
+    "D12": {"cardname": "Queen of diamonds", "value": 12, "priority": 4, "realvalue": 0.5},
+    "D13": {"cardname": "King of diamonds", "value": 13, "priority": 4, "realvalue": 0.5},
+    "H01": {"cardname": "Ace of hearts", "value": 1, "priority": 3, "realvalue": 1},
+    "H02": {"cardname": "Two of hearts", "value": 2, "priority": 3, "realvalue": 2},
+    "H03": {"cardname": "Three of hearts", "value": 3, "priority": 3, "realvalue": 3},
+    "H04": {"cardname": "Four of hearts", "value": 4, "priority": 3, "realvalue": 4},
+    "H05": {"cardname": "Five of hearts", "value": 5, "priority": 3, "realvalue": 5},
+    "H06": {"cardname": "Six of hearts", "value": 6, "priority": 3, "realvalue": 6},
+    "H07": {"cardname": "Seven of hearts", "value": 7, "priority": 3, "realvalue": 7},
+    "H11": {"cardname": "Jack of hearts", "value": 11, "priority": 3, "realvalue": 0.5},
+    "H12": {"cardname": "Queen of hearts", "value": 12, "priority": 3, "realvalue": 0.5},
+    "H13": {"cardname": "King of hearts", "value": 13, "priority": 3, "realvalue": 0.5},
+    "C01": {"cardname": "Ace of clovers", "value": 1, "priority": 2, "realvalue": 1},
+    "C02": {"cardname": "Two of clovers", "value": 2, "priority": 2, "realvalue": 2},
+    "C03": {"cardname": "Three of clovers", "value": 3, "priority": 2, "realvalue": 3},
+    "C04": {"cardname": "Four of clovers", "value": 4, "priority": 2, "realvalue": 4},
+    "C05": {"cardname": "Five of clovers", "value": 5, "priority": 2, "realvalue": 5},
+    "C06": {"cardname": "Six of clovers", "value": 6, "priority": 2, "realvalue": 6},
+    "C07": {"cardname": "Seven of clovers", "value": 7, "priority": 2, "realvalue": 7},
+    "C11": {"cardname": "Jack of clovers", "value": 11, "priority": 2, "realvalue": 0.5},
+    "C12": {"cardname": "Queen of clovers", "value": 12, "priority": 2, "realvalue": 0.5},
+    "C13": {"cardname": "King of clovers", "value": 13, "priority": 2, "realvalue": 0.5},
+    "S01": {"cardname": "Ace of spades", "value": 1, "priority": 1, "realvalue": 1},
+    "S02": {"cardname": "Two of spades", "value": 2, "priority": 1, "realvalue": 2},
+    "S03": {"cardname": "Three of spades", "value": 3, "priority": 1, "realvalue": 3},
+    "S04": {"cardname": "Four of spades", "value": 4, "priority": 1, "realvalue": 4},
+    "S05": {"cardname": "Five of spades", "value": 5, "priority": 1, "realvalue": 5},
+    "S06": {"cardname": "Six of spades", "value": 6, "priority": 1, "realvalue": 6},
+    "S07": {"cardname": "Seven of spades", "value": 7, "priority": 1, "realvalue": 7},
+    "S11": {"cardname": "Jack of spades", "value": 11, "priority": 1, "realvalue": 0.5},
+    "S12": {"cardname": "Queen of spades", "value": 12, "priority": 1, "realvalue": 0.5},
+    "S13": {"cardname": "King of spades", "value": 13, "priority": 1, "realvalue": 0.5}
 }
 
 stored_players = {
@@ -59,18 +97,15 @@ stored_players = {
               }
 }
 
-players = {"11115555A":
-               {"name": "Mario", "human": True, "bank": False, "initialCard": "", "priority": 0, "type": 40, "bet": 4,
-                "points": 0, "cards": [], "roundPoints": 0},
-           "22225555A":
-               {"name": "Pedro", "human": True, "bank": False, "initialCard": "", "priority": 0, "type": 40, "bet": 4,
-                "points": 0, "cards": [], "roundPoints": 0},
+players = {"boot1_id":
+               {"name": "boot1", "human": False, "bank": False, "initialCard": "", "priority": 0, "type": 40,
+                "bet": 4, "points": 0, "cards": [], "roundPoints": 0},
            }
 
 game_settings = {
-    "default": {"roundlimit":{"active":True,"rounds":5},"deck":{"spanish":True,"english":False}},
+    "default": {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}},
 
-    "custom": {"roundlimit":{"active":False,"rounds":0},"deck":{"spanish":True,"english":False}}
+    "custom": {"roundlimit":{"active":False,"rounds":0},"deck":{"spn_cards":True,"eng_cards":False}}
 }
 
 # Crearemos una lista, por ejemplo game=[], donde tendremos los NIF de todos los jugadores

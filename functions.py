@@ -157,7 +157,7 @@ def delplayer():
                         answer = input("Are you sure you want to delete this player? y/n")
                     if answer.lower() == "y":
                         # look with search_nif in stored_players["humans"][search_nif] and delete all content
-                        print()
+                        del stored_players["humans"][search_nif]
                     elif answer.lower() == "n":
                         input("Player successfully not deleted!\nPress any key to continue")
                     break
@@ -177,7 +177,8 @@ def delplayer():
                         answer = input("Are you sure you want to delete this player? y/n")
                     if answer.lower() == "y":
                         # look with search_id in stored_players["humans"][key][search_name] and delete all content
-                        print()
+                        del stored_players["humans"][key][search_name]
+
                     elif answer.lower() == "n":
                         input("Player successfully not deleted!\nPress any key to continue")
                     break
@@ -199,7 +200,8 @@ def delplayer():
                     answer = input("Are you sure you want to delete this player? y/n")
                 if answer.lower() == "y":
                     # look with search_id in stored_players["boots"][search_id] and delete all content
-                    print()
+                    del stored_players["boots"][search_id]
+
                 elif answer.lower() == "n":
                     input("Player successfully not deleted!\nPress any key to continue")
                 break
@@ -220,7 +222,8 @@ def delplayer():
                         answer = input("Are you sure you want to delete this boot? y/n")
                     if answer.lower() == "y":
                         # look with search_id in stored_players["boots"][key][search_name] and delete all content
-                        print()
+                        del stored_players["boots"][key][search_name]
+
                     elif answer.lower() == "n":
                         input("Boot successfully not deleted!\nPress any key to continue")
                     break
