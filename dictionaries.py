@@ -1,5 +1,3 @@
-# Estructuras de datos y variables importantes en el juego:
-# Utilizaremos las siguientes estructuras de datos en el juego:
 spn_cards = {
     "O01": {"cardname": "As de Oros", "value": 1, "priority": 4, "realValue": 1},
     "O02": {"cardname": "Dos de Oros", "value": 2, "priority": 4, "realValue": 2},
