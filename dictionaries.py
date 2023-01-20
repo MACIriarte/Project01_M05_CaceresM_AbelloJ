@@ -64,16 +64,16 @@ eng_cards = {
     "H11": {"cardname": "Jack of hearts", "value": 11, "priority": 3, "realvalue": 0.5},
     "H12": {"cardname": "Queen of hearts", "value": 12, "priority": 3, "realvalue": 0.5},
     "H13": {"cardname": "King of hearts", "value": 13, "priority": 3, "realvalue": 0.5},
-    "C01": {"cardname": "Ace of clovers", "value": 1, "priority": 2, "realvalue": 1},
-    "C02": {"cardname": "Two of clovers", "value": 2, "priority": 2, "realvalue": 2},
-    "C03": {"cardname": "Three of clovers", "value": 3, "priority": 2, "realvalue": 3},
-    "C04": {"cardname": "Four of clovers", "value": 4, "priority": 2, "realvalue": 4},
-    "C05": {"cardname": "Five of clovers", "value": 5, "priority": 2, "realvalue": 5},
-    "C06": {"cardname": "Six of clovers", "value": 6, "priority": 2, "realvalue": 6},
-    "C07": {"cardname": "Seven of clovers", "value": 7, "priority": 2, "realvalue": 7},
-    "C11": {"cardname": "Jack of clovers", "value": 11, "priority": 2, "realvalue": 0.5},
-    "C12": {"cardname": "Queen of clovers", "value": 12, "priority": 2, "realvalue": 0.5},
-    "C13": {"cardname": "King of clovers", "value": 13, "priority": 2, "realvalue": 0.5},
+    "X01": {"cardname": "Ace of clovers", "value": 1, "priority": 2, "realvalue": 1},
+    "X02": {"cardname": "Two of clovers", "value": 2, "priority": 2, "realvalue": 2},
+    "X03": {"cardname": "Three of clovers", "value": 3, "priority": 2, "realvalue": 3},
+    "X04": {"cardname": "Four of clovers", "value": 4, "priority": 2, "realvalue": 4},
+    "X05": {"cardname": "Five of clovers", "value": 5, "priority": 2, "realvalue": 5},
+    "X06": {"cardname": "Six of clovers", "value": 6, "priority": 2, "realvalue": 6},
+    "X07": {"cardname": "Seven of clovers", "value": 7, "priority": 2, "realvalue": 7},
+    "X11": {"cardname": "Jack of clovers", "value": 11, "priority": 2, "realvalue": 0.5},
+    "X12": {"cardname": "Queen of clovers", "value": 12, "priority": 2, "realvalue": 0.5},
+    "X13": {"cardname": "King of clovers", "value": 13, "priority": 2, "realvalue": 0.5},
     "S01": {"cardname": "Ace of spades", "value": 1, "priority": 1, "realvalue": 1},
     "S02": {"cardname": "Two of spades", "value": 2, "priority": 1, "realvalue": 2},
     "S03": {"cardname": "Three of spades", "value": 3, "priority": 1, "realvalue": 3},
@@ -97,7 +97,7 @@ stored_players = {
               }
 }
 
-players = {"boot1_id":
+players_dict = {"boot1_id":
                {"name": "boot1", "human": False, "bank": False, "initialCard": "", "priority": 0, "type": 40,
                 "bet": 4, "points": 0, "cards": [], "roundPoints": 0},
            }

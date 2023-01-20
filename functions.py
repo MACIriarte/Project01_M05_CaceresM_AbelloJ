@@ -1,3 +1,14 @@
+import pymysql
+
+connection = pymysql.connect(
+    host='localhost',
+    user='root',
+    password='12345678',
+    db='db_game',
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
+
 from dictionaries import *
 
 
@@ -72,7 +83,7 @@ def addplayer():
         return
 
 
-def addplayer2():
+def addplayerdb():
     while True:
         answer = input("The new player is human? Y/n\nOption: ").lower()
         while answer not in ["y", "n"]:
@@ -87,7 +98,6 @@ def addplayer2():
             print("Invalid input. Choose an option between 1, 2, or 3.")
             new_player_behaviour = input("Choose new player behaviour:\n1) Cautious\n2) Moderated\n3) Bold\nOption: ")
 
-        new_player_behaviour = ["cautious", "moderated", "bold"][int(new_player_behaviour) - 1]
 
         if answer == "y":
             while True:
@@ -95,19 +105,29 @@ def addplayer2():
                 if not new_player_id[:8].isdigit() or not new_player_id[8:9].isalpha():
                     print(
                         "Invalid input. The first eight characters need to be only numbers and the last one a letter.")
-                elif new_player_id in stored_players["humans"]:
-                    print("This NIF already exists!")
-                else:
-                    break
+                with connection.cursor() as cursor:
+                    sql = "SELECT player_id FROM player WHERE player_id = %s"
+                    cursor.execute(sql, (new_player_id,))
+                    result = cursor.fetchone()
+                    if result:
+                        print("This ID already exists!")
+                        continue
 
             answer1 = input("Do you want to add this player? Y/n\nOption: ").lower()
             while answer1 not in ["y", "n"]:
                 answer1 = input("Invalid input. Do you want to add this player? Y/n\nOption: ").lower()
 
             if answer1 == "y":
-                stored_players["humans"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
-                                                           "earnings": 0, "games": 0, "minutes": 0}
-                print("Player added successfully!")
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            "INSERT INTO player (player_name, player_risk, player_id, human) VALUES (%s, %s, %s, %s)",
+                            (new_player_name, new_player_behaviour, new_player_id, 1))
+                        connection.commit()
+                        print("Player added successfully!")
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+
             else:
                 print("Player not added.")
 
@@ -124,112 +144,128 @@ def addplayer2():
                 answer2 = input("Invalid input. Do you want to add this player? Y/n\nOption: ").lower()
 
             if answer2 == "y":
-                stored_players["boots"][new_player_id] = {"name": new_player_name, "behaviour": new_player_behaviour,
-                                                          "earnings": 0, "games": 0, "minutes": 0}
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            "INSERT INTO player (player_name, player_risk, player_id, human) VALUES (%s, %s, %s, %s)",
+                            (new_player_name, new_player_behaviour, new_player_id, 0))
+                        connection.commit()
+                        print("Player added successfully!")
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+
+            if answer2 == "n":
+                print("Player not added.")
+
         return
 
+def delete_player(player_id):
+    try:
+        with connection.cursor() as cursor:
+            sql = f"DELETE FROM player WHERE player_id = {player_id}"
+            cursor.execute(sql)
+            connection.commit()
+            print(f"Player with ID {player_id} has been deleted.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-def delplayer():
+def showplayersdb():
+    offset = 0
+    limit = 10
     while True:
-        answer = input("The player you want to delete is human? y/n\nOption: ")
-        while not answer.lower() == "y" or answer.lower() == "n":
-            input("Pleas choose an option between y or n!\nPress any key to continue")
-            answer = input("The player you want to delete is human? y/n\nOption: ")
-        if answer.lower() == "y":
-            option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
-            while option not in ["1","2","3"]:
-                input("Choose an option between 1, 2 or 3!\nPress any key to continue")
-                option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
-            if option == 1:
-                while True:
-                    search_nif = input("NIF to search: ")
-                    while search_nif[:8].isdigit() and search_nif[8:9].isalpha():
-                        input("The first eight characters needs to be only numbers and the last a letter!"
-                              "\nPress any key to continue")
-                        search_nif = input("NIF to search: ")
-                    while search_nif not in stored_players["humans"]:
-                        input("This NIF does not exist, please make sure is the right one!\nPress any key to continue")
-                        search_nif = input("NIF to search: ")
+        menu = "\n\n\n" + "*"*140+"\n\n"+"\tPlayers ID\t\t\t\tPlayers name\t\t\t\tPlayers behaviour\n\n"
+        try:
+            with connection.cursor() as cursor:
+                sql = f"SELECT player_id, player_name, player_risk FROM player LIMIT {limit} OFFSET {offset}"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                for player in result:
+                    player_id = player["player_id"]
+                    player_name = player["player_name"]
+                    player_risk = player["player_risk"]
+                    if player_risk == 1:
+                        player_risk = "Cautious"
+                    elif player_risk == 2:
+                        player_risk = "Moderate"
+                    elif player_risk == 3:
+                        player_risk = "Bold"
+                    elif player_risk == 4:
+                        player_risk = "Dev"
+                    menu += f"\t{player_id}\t\t\t\t{player_name}\t\t\t\t{player_risk}\n"
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
-                    answer = input("Are you sure you want to delete this player? y/n")
-                    while not answer == "y" and answer == "n":
-                        input("Choose an option between y/n!\nPress any key to continue")
-                        answer = input("Are you sure you want to delete this player? y/n")
-                    if answer.lower() == "y":
-                        # look with search_nif in stored_players["humans"][search_nif] and delete all content
-                        del stored_players["humans"][search_nif]
-                    elif answer.lower() == "n":
-                        input("Player successfully not deleted!\nPress any key to continue")
-                    break
-            if option == 2:
-                while True:
-                    search_name = input("Name to search: ")
-                    search_name = search_name.split()
-                    while not search_name:
-                        input("The name given must not be empty!\nPress any key to continue")
-                        search_name = input("Name to search: ")
-                    while search_name not in stored_players:
-                        input("This name does not exist, please make sure is the right one!\nPress any key to continue")
-                        search_name = input("Name to search: ")
-                    answer = input("Are you sure you want to delete this boot? y/n")
-                    while not answer == "y" and answer == "n":
-                        input("Choose an option between y/n!\nPress any key to continue")
-                        answer = input("Are you sure you want to delete this player? y/n")
-                    if answer.lower() == "y":
-                        # look with search_id in stored_players["humans"][key][search_name] and delete all content
-                        del stored_players["humans"][key][search_name]
+        print(menu)
+        option = input("\t\t+ to display more players, - to display less players, exit to go back\n\t\tOption: ")
+        if option == "+":
+            offset += limit
+            print("+ option selected")
+        elif option == "-":
+            if offset >= limit:
+                offset -= limit
+            print("- option selected")
+        elif option[:2].lower() == "del" and (len(option) == 13 and option[3:11].isdigit() and option[11:12].isalpha()):
+            player_id = int(option[3:11])
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT player_id, player_name FROM player WHERE player_id = {player_id}")
+                result = cursor.fetchone()
+                if result:
+                    player_name = result["player_name"]
+                    delete_player = input(
+                        f"Are you sure you want to delete this player? y/n\n{player_id}\n{player_name}\nOption: ")
+                    if delete_player.lower() == "y":
+                        delete_player(player_id)
+                        input("Player successfully deleted!\nPress any key to continue")
+                        continue
+                    if delete_player.lower() == "n":
+                        input("Player not deleted!\nPress any key to continue")
 
-                    elif answer.lower() == "n":
-                        input("Player successfully not deleted!\nPress any key to continue")
-                    break
+        elif option.lower() == "exit":
+            input("\nPress any key to continue".rjust(55))
+            return
 
-        if answer.lower() == "n":
-            option = input("1)Find by NIF\n2)Find by name\n3)Exit\nOption: ")
-            while option not in ["1","2","3"]:
-                input("Choose an option between 1, 2 or 3!\nPress any key to continue")
-                option = input("1)Find by ID\n2)Find by name\n3)Exit\nOption: ")
-
-            if option == 1:
-                search_id = input("ID to search: ")
-                while search_id not in stored_players["boots"]:
-                    input("This ID does not exist, please make sure is the right one!\nPress any key to continue")
-                    search_id = input("ID to search: ")
-                answer = input("Are you sure you want to delete this boot? y/n")
-                while not answer == "y" and answer == "n":
-                    input("Choose an option between y/n!\nPress any key to continue")
-                    answer = input("Are you sure you want to delete this player? y/n")
-                if answer.lower() == "y":
-                    # look with search_id in stored_players["boots"][search_id] and delete all content
-                    del stored_players["boots"][search_id]
-
-                elif answer.lower() == "n":
-                    input("Player successfully not deleted!\nPress any key to continue")
-                break
-
-            if option == 2:
-                while True:
-                    search_name = input("Name to search: ")
-                    search_name = search_name.split()
-                    while not search_name:
-                        input("The name given must not be empty!\nPress any key to continue")
-                        search_name = input("Name to search: ")
-                    while search_name not in stored_players:
-                        input("This name does not exist, please make sure is the right one!\nPress any key to continue")
-                        search_name = input("Name to search: ")
-                    answer = input("Are you sure you want to delete this boot? y/n")
-                    while not answer == "y" and answer == "n":
-                        input("Choose an option between y/n!\nPress any key to continue")
-                        answer = input("Are you sure you want to delete this boot? y/n")
-                    if answer.lower() == "y":
-                        # look with search_id in stored_players["boots"][key][search_name] and delete all content
-                        del stored_players["boots"][key][search_name]
-
-                    elif answer.lower() == "n":
-                        input("Boot successfully not deleted!\nPress any key to continue")
-                    break
-
-
-def setplayers():
+def setplayers(dictionary="players_dict"):
+    flg_1 = True
+    flg_2 = False
+    while True:
+        while flg_1:
+            add_player = input("Player ID to add: ")
+            try:
+                with connection.cursor() as cursor:
+                    sql = f"SELECT player_id, player_name, player_risk, is_human FROM player WHERE player_id = '{add_player}'"
+                    cursor.execute(sql)
+                    result = cursor.fetchone()
+                    if result:
+                        player_id = result["player_id"]
+                        player_name = result["player_name"]
+                        player_risk = result["player_risk"]
+                        is_human = result["is_human"]
+                        if player_risk == 1:
+                            player_risk = "Cautious"
+                        elif player_risk == 2:
+                            player_risk = "Moderate"
+                        elif player_risk == 3:
+                            player_risk = "Bold"
+                        elif player_risk == 4:
+                            player_risk = "Dev"
+                        players[player_id] = {"name": player_name, "behaviour": player_risk, "human": is_human}
+                        input("Player successfully added!\nPress any key to continue")
+                    else:
+                        input("Player with the given ID not found! Please make sure the ID is correct\nPress any key to continue")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+            flg_1 = False
+            flg_2 = True
+        while flg_2:
+            option = input("Add one more player? y/n\nOption: ")
+            while not (option.lower() == "y" or option.lower() == "n"):
+                option = input("Please choose between y/n\nAdd one more player? y/n\nOption: ")
+            if option.lower()=="y":
+                flg_2 = False
+                flg_1 = True
+            elif option.lower()=="n":
+                # exit
+                return players
 
 
 
