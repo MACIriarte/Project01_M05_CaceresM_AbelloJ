@@ -97,10 +97,7 @@ stored_players = {
               }
 }
 
-players_dict = {"boot1_id":
-               {"name": "boot1", "human": False, "bank": False, "initialCard": "", "priority": 0, "type": 40,
-                "bet": 4, "points": 0, "cards": [], "roundPoints": 0},
-           }
+players_dict = {}
 
 game_settings = {
     "default": {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}},

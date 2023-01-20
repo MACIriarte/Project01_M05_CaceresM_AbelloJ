@@ -315,4 +315,4 @@ def mainprogram():
 
 
 def playGame():
- print()
+ print("a")
