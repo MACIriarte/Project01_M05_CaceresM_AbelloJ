@@ -1,16 +1,16 @@
 import random
 import pymysql
+import pymysql.cursors
+from dictionaries import *
 
 connection = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='12345678',
+    host='13.69.10.32',
+    user='alumno',
+    password='12345678Abc',
     db='db_game',
     charset='utf8mb4',
     cursorclass=pymysql.cursors.DictCursor
 )
-
-from dictionaries import *
 
 
 def addplayerdb():
@@ -429,11 +429,11 @@ def setDeckGame():
             deck_game = {}
             # Iterate through the selected rows and add them to the dictionary
             for row in result:
-                card_id = row['card_id']
-                card_name = row['card_name']
-                card_value = row['card_value']
-                card_priority = row['card_priority']
-                card_real_value = row['card_real_value']
+                card_id = row["card_id"]
+                card_name = row["card_name"]
+                card_value = row["card_value"]
+                card_priority = row["card_priority"]
+                card_real_value = row["card_real_value"]
                 deck_game[card_id] = {"cardname": card_name, "value": card_value, "priority": card_priority,
                                       "realvalue": card_real_value}
             global deck_game
