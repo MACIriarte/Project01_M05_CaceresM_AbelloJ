@@ -1,3 +1,4 @@
+import random
 import pymysql
 
 connection = pymysql.connect(
@@ -26,7 +27,6 @@ def addplayerdb():
         while new_player_behaviour not in ["1", "2", "3"]:
             print("Invalid input. Choose an option between 1, 2, or 3.")
             new_player_behaviour = input("Choose new player behaviour:\n1) Cautious\n2) Moderated\n3) Bold\nOption: ")
-
 
         if answer == "y":
             while True:
@@ -104,7 +104,7 @@ def showplayersdb():
     offset = 0
     limit = 10
     while True:
-        menu = "\n\n\n" + "*"*140+"\n\n"+"\tPlayers ID\t\t\t\tPlayers name\t\t\t\tPlayers behaviour\n\n"
+        menu = "\n\n\n" + "*" * 140 + "\n\n" + "\tPlayers ID\t\t\t\tPlayers name\t\t\t\tPlayers behaviour\n\n"
         try:
             with connection.cursor() as cursor:
                 sql = f"SELECT player_id, player_name, player_risk FROM player LIMIT {limit} OFFSET {offset}"
@@ -156,7 +156,7 @@ def showplayersdb():
             return
 
 
-def setplayers(dictionary="players_dict"):
+def setplayers():
     flg_1 = True
     flg_2 = False
     while True:
@@ -164,14 +164,14 @@ def setplayers(dictionary="players_dict"):
             add_player = input("Player ID to add: ")
             try:
                 with connection.cursor() as cursor:
-                    sql = f"SELECT player_id, player_name, player_risk, is_human FROM player WHERE player_id = '{add_player}'"
+                    sql = f"SELECT player_id, player_name, player_risk, human FROM player WHERE player_id = '{add_player}'"
                     cursor.execute(sql)
                     result = cursor.fetchone()
                     if result:
                         player_id = result["player_id"]
                         player_name = result["player_name"]
                         player_risk = result["player_risk"]
-                        is_human = result["is_human"]
+                        human = result["human"]
                         if player_risk == 1:
                             player_risk = "Cautious"
                         elif player_risk == 2:
@@ -180,10 +180,16 @@ def setplayers(dictionary="players_dict"):
                             player_risk = "Bold"
                         elif player_risk == 4:
                             player_risk = "Dev"
-                        players_dict[player_id] = {"name": player_name, "behaviour": player_risk, "human": is_human}
+                        players_dict[player_id] = {"name": player_name, "behaviour": player_risk, "bet": 0,
+                                                   "human": human,
+                                                   "points": 40, "bank": False}
                         input("Player successfully added!\nPress any key to continue")
+                        with connection.cursor() as cursor:
+                            cursor.execute("UPDATE cardgame SET players = players + 1")
+                            connection.commit()
                     else:
-                        input("Player with the given ID not found! Please make sure the ID is correct\nPress any key to continue")
+                        input(
+                            "Player with the given ID not found! Please make sure the ID is correct\nPress any key to continue")
             except Exception as e:
                 print(f"An error occurred: {e}")
             flg_1 = False
@@ -192,10 +198,10 @@ def setplayers(dictionary="players_dict"):
             option = input("Add one more player? y/n\nOption: ")
             while not (option.lower() == "y" or option.lower() == "n"):
                 option = input("Please choose between y/n\nAdd one more player? y/n\nOption: ")
-            if option.lower()=="y":
+            if option.lower() == "y":
                 flg_2 = False
                 flg_1 = True
-            elif option.lower()=="n":
+            elif option.lower() == "n":
                 # exit
                 return players_dict
 
@@ -289,6 +295,7 @@ def mainprogram():
                     # exit
                     return
         while flg01:
+            # bbdd players menu
             option = input(menu01 + "Option: ".rjust(57))
             while option not in [1, 2, 3]:
                 option = input(menu01 + "Option: ".rjust(57))
@@ -304,15 +311,199 @@ def mainprogram():
                     flg01 = False
                     flg00 = True
 
+        while flg02:
+            # settings menu
+            menu02 = "1)Set game players\n2)Set cards deck\n3)Set max rounds\n4)Go back"
+            option = input(menu02 + "\nOption: ")
+            while option not in [1, 2, 3, 4]:
+                input("The option given must be between 1 and 4!".rjust(55) + "\nPress any key to continue".rjust(55))
+                option = input(menu01 + "\nOption: ".rjust(55))
+            else:
+                option = int(option)
+                if option == 1:
+                    # set gamers function
+                    setplayers()
+                elif option == 2:
+                    # set cards deck function
+                    setDeck()
+                elif option == 3:
+                    # set max rounds function
+                    setMaxRounds()
+                elif option == 4:
+                    # go back
+                    flg02 = False
+                    flg00 = True
+
         while flg03:
-            # check if value of the column "players" of table "cardgame" is equals to 2 or greater
-            # if not then
-            input("You must set players first! Please add players on settings!\nPress any key to continue")
-            flg03 = False
-            flg00 = True
-            # if the value of the column "players" of table "cardgame" is equals to 2 or greater then
-            playGame()
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT players FROM cardgame WHERE players >= 2")
+                result = cursor.fetchone()
+                if result is None:
+                    input("You must set players first! Please add players on settings!\nPress any key to continue")
+                    flg03 = False
+                    flg00 = True
+                else:
+                    playGame()
+
+
+def setDeck():
+    option = input("Which deck you want to use in the game?\nspn = Spanish deck or eng = English deck?\nOption: ")
+    while not option.lower() == "spn" or option.lower() == "eng":
+        input("Please choose between spn/eng\nPress any key to continue")
+        option = input("Which deck you want to use in the game?\nspn = Spanish deck or eng = English deck?\nOption: ")
+    if option.lower() == "spn":
+        # game_settings = {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}
+        # }
+        game_settings["deck"]["spn_cards"] = True
+        game_settings["deck"]["eng_cards"] = False
+
+    elif option.lower() == "eng":
+        # game_settings = {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":False,"eng_cards":True}
+        # }
+        game_settings["deck"]["eng_cards"] = True
+        game_settings["deck"]["spn_cards"] = False
+    return
+
+
+def setMaxRounds():
+    while True:
+        option = input("How many rounds do you want as maximum in the game?\nWrite none if you dont want a maximum"
+                       "\nOption: ")
+        if option.lower() == "none":
+            game_settings["roundlimit"]["active"] = False
+            continue
+        while not option.isdigit() and int(option) > 0 or option.lower() == "none":
+            input(
+                "Please enter a valid number of rounds or write none to not set a maximum!\nPress any key to continue")
+            option = input("How many rounds do you want as maximum in the game?\nOption: ")
+        else:
+            option = int(option)
+            game_settings["roundlimit"]["rounds"] = option
+            return
 
 
 def playGame():
- print("a")
+    while True:
+        # setDeckGame() to prepare the deck for the game
+        setDeckGame()
+        # listAllPlayers to list all players into a custom display
+        listAllPlayers()
+        input("This is the first round where the order of cards given to each player will be decided"
+              "\nPress any key to continue")
+        # firstRound() to decide the order in which the cards will be given to the players
+        firstRound()
+
+
+def firstRound():
+    with connection.cursor() as cursor:
+        for player_id, player_data in players_dict.items():
+            sql = "INSERT INTO player_game_round (round_num, player_id, is_bank, bet_points, starting_points) VALUES (%s, %s, %s, %s, %s)"
+            is_bank = 1 if player_data["bank"] else 0
+            cursor.execute(sql, (1, player_id, is_bank, player_data["bet"], player_data["points"]))
+        connection.commit()
+
+    players_cards = {player_id: [] for player_id in players_dict.items()}
+
+    for player in players_dict.items():
+        card = random.choice([card_id for card_id in deck_game.keys() if card_id not in players_cards[player]])
+        players_cards[player].append(card)
+
+    playersOrder = []
+    for player, cards in players_cards.items():
+        realvalue = deck_game[cards[0]]["realvalue"]
+        priority = deck_game[cards[0]]["priority"]
+        playersOrder.append((player, realvalue, priority))
+
+    playersOrder.sort(key=lambda x: (-x[1], -x[2]))
+    global players_cards, playersOrder
+    return players_cards, playersOrder
+
+def setDeckGame():
+    # game_settings = {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}}
+    if game_settings["deck"]["spn_cards"] == True and game_settings["deck"]["eng_cards"] == False:
+        with connection.cursor() as cursor:
+            # Select all rows from the 'card' table where 'deck_id' equals 'spn'
+            sql = "SELECT card_id, card_name, card_value, card_priority, card_real_value FROM card WHERE deck_id = 'spn'"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            deck_game = {}
+            # Iterate through the selected rows and add them to the dictionary
+            for row in result:
+                card_id = row['card_id']
+                card_name = row['card_name']
+                card_value = row['card_value']
+                card_priority = row['card_priority']
+                card_real_value = row['card_real_value']
+                deck_game[card_id] = {"cardname": card_name, "value": card_value, "priority": card_priority,
+                                      "realvalue": card_real_value}
+            global deck_game
+    return deck_game
+
+
+def listAllPlayers():
+    display_players = "\n\n\n" + "*" * 140 + "\n\n\tName\t\t\tPoints\t\tBehaviour\t\tBet\t\tBank\n\n"
+    for player_id, player_info in players_dict.items():
+        display_players += "\n\n\t{}\t\t\t{}\t\t{}\t\t{}\t\t{}\n\n".format(
+            player_info["name"], player_info["points"], player_info["behaviour"], player_info["bet"],
+            player_info["bank"])
+        display_players += "*" * 140 + "\n\n"
+    print(display_players)
+    return display_players
+
+def cardsBetRepartition():
+    for player_id in players_dict:
+        if players_dict[player_id]["human"] == True or players_dict[player_id]["human"] == 1:
+            # the player is human, so ask them to make a bet
+            make_bet = input("How much do you want to bet this round? You have available {} points!\nBet: "
+                             .format(str(players_dict[player_id]["points"])))
+            players_dict[player_id]["bet"] = int(make_bet)
+        else:
+            # the player is a bot, so determine the likelihood of making a higher bet based on the "behaviour" value
+            if players_dict[player_id]["behaviour"] == 1:
+                likelihood = 0.3
+            elif players_dict[player_id]["behaviour"] == 2:
+                likelihood = 0.5
+            else:
+                likelihood = 0.7
+            if random.random() < likelihood:
+                # make a high bet
+                make_bet = players_dict[player_id]["points"]/2 + random.randint(0, players_dict[player_id]["points"]/4)
+            else:
+                # make a low bet
+                make_bet = random.randint(0, players_dict[player_id]["points"]/2)
+            players_dict[player_id]["bet"] = int(make_bet)
+
+    for player in playersOrder:
+        players_cards[player] = []
+        if players_dict[player]["human"] == False or players_dict[player]["human"] == 0:
+            # the player is a bot
+            if players_dict[player]["behaviour"] == 1:
+                likelihood = 0.3
+            elif players_dict[player]["behaviour"] == 2:
+                likelihood = 0.5
+        else:
+            likelihood = 0.7
+        card_count = 0
+        while (random.random() < likelihood) and (card_count <= 7.5):
+            # pick a random card from the deck
+            card_id = random.choice([card_id for card_id in deck_game if card_id not in players_cards[player]])
+            players_cards[player].append(card_id)
+            card_count += deck_game[card_id]["realvalue"]
+        players_dict[player]["points"] -= players_dict[player]["bet"]
+        else:
+            # the player is human
+            card_count = 0
+        while True:
+            option = input("Do you want to pick another card? y/n \nOption: ")
+            if option.lower() == "y":
+                # pick a random card from the deck
+                card_id = random.choice([card_id for card_id in deck_game if card_id not in players_cards[player]])
+                players_cards[player].append(card_id)
+                card_count += deck_game[card_id]["realvalue"]
+                # check if player's cards total value is less than 7.5
+                if card_count > 7.5:
+                    print("You cannot pick another card, your cards total value is greater than 7.5")
+                    break
+            else:
+                break
+        players_dict[player]["points"] -= players_dict[player]["bet"]

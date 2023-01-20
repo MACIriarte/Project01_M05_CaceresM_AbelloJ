@@ -99,41 +99,9 @@ stored_players = {
 
 players_dict = {}
 
-game_settings = {
-    "default": {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}},
+game_status = {"current_round":1,}
 
-    "custom": {"roundlimit":{"active":False,"rounds":0},"deck":{"spn_cards":True,"eng_cards":False}}
+game_settings = {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}
 }
 
-# Crearemos una lista, por ejemplo game=[], donde tendremos los NIF de todos los jugadores
-# que participen en la partida en cada momento.
-game = []
-
-# Crearemos una lista, por ejemplo mazo=[], donde tendremos todos los id’s de las cartas que
-# componen el mazo en cada momento.
-deck = []
-
-# Crearemos un diccionario, por ejemplo context_game={}, donde tendremos una serie de
-# variables de contexto a las que podamos acceder desde cualquier sitio.
-context_game = []
-# Por ejemplo context_game[«game»] = lista de jugadores en la partida actual
-# context_game[«round»] = ronda actual de la partida.
-
-# Para la inserción de datos en BBDD, sería conveniente crearse un diccionario para cada una
-# de las tablas que tengamos que actualizar durante el juego.
-# Por ejemplo:
-cardgame = {"cardgame_id": "id_de_partida", "players": "Numero_de_jugadores",
-            "start_hour": "Hora_de_inicio_de_artida(datetime)",
-            "rounds": "Número_de_rondas", "end_hour": "hora_final_de_partida(datetime)"}
-
-player_game = {"id_game": {"id_player_1": {"initial_card_id": "card_id", "starting_points": "puntos al inicio",
-                                           "ending_points": "puntos al final de partida"},
-                           "id_player_n": {"initial_card_id": "card id",
-                                           "starting_points": "puntos al inicio",
-                                           "ending_points": "puntos al final de partida"}}}
-
-# player_game_round = {"round":{"id_player_1":{"is_bank":"0 ó 1","bet_points":"apuesta en la ronda",
-# "starting_round_points":"puntos al inicio de la partida","cards_value":"puntos obtenido en la actual ronda",
-# "endind_round_points":"puntos al final de la ronda"},...,{"id_player_n":{"is_bank":"0 ó 1","bet_points":"apuesta en
-# la ronda", "starting_round_points":"puntos al inicio de la partida","cards_value":"puntos obtenido en la actual
-# ronda", "endind_round_points":"puntos al final de la ronda"}
+players_cards = {"player_id":["card_id","card_id"]}
