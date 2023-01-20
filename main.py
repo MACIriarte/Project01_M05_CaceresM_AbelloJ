@@ -13,4 +13,10 @@ connection = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
+cur = connection.cursor()
+
+cur.execute(
+    ""
+)
+
 mainprogram()
