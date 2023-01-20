@@ -1,111 +1,13 @@
-"""
+from dictionaries import *
+import pymysql
 
+connection = pymysql.connect(
+    host='localhost',
+    user='root',
+    password='12345678',
+    db='db_game',
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
 
-********************************************************************************************************************************************
-
-                      _   __                  __  __                                   ____   __
-                     / | / /___  _      __   / / / /__  __ ____ ___   ____ _ ____     / __ \ / /____ _ __  __ ___   _____
-                    /  |/ // _ \| | /| / /  / /_/ // / / // __ `__ \ / __ `// __ \   / /_/ // // __ `// / / // _ \ / ___/
-                   / /|  //  __/| |/ |/ /  / __  // /_/ // / / / / // /_/ // / / /  / ____// // /_/ // /_/ //  __// /
-                  /_/ |_/ \___/ |__/|__/  /_/ /_/ \__,_//_/ /_/ /_/ \__,_//_/ /_/  /_/    /_/ \__,_/ \__, / \___//_/
-                                                                                                    /____/
-
-
-********************************************************************************************************************************************
-                                      Name:
-"""
-def playGame():
-    option = ""
-    menu00 = "\n\n\n"+"*"*140+"\n"+\
-           "\n_____".rjust(37)+"___".rjust(25)+"__".rjust(14)+"__".rjust(3)+"__".rjust(2)+"______".rjust(6)+\
-           "\n/ ___/___ _   _____  ____     /   |  ____  ____/ /  / / / /___ _/ / __/".rjust(36)+\
-           "\n\__ \/ _ \ | / / _ \/ __ \   / /| | / __ \/ __  /  / /_/ / __ `/ / /_".rjust(36)+\
-           "\n___/ /  __/ |/ /  __/ / / /  / ___ |/ / / / /_/ /  / __  / /_/ / / __/".rjust(35)+\
-           "\n/____/\___/|___/\___/_/ /_/  /_/  |_/_/ /_/\__,_/  /_/ /_/\__,_/_/_/".rjust(34)+\
-           "\n ______     _                   _______                      _             _   _ _ _       ".rjust(25)+\
-           "\n|  ____|   | |                 |__   __|                    | |           (_) (_) | |      ".rjust(25)+\
-           "\n| |__   ___| |_ _____   _____     | | ___ _ __ _ __ __ _  __| | __ _ ___   _   _| | | __ _ ".rjust(25)+\
-           "\n|  __| / __| __/ _ \ \ / / _ \    | |/ _ \ '__| '__/ _` |/ _` |/ _` / __| | | | | | |/ _` |".rjust(25)+\
-           "\n| |____\__ \ ||  __/\ V /  __/    | |  __/ |  | | | (_| | (_| | (_| \__ \ | | | | | | (_| |".rjust(25)+\
-           "\n|______|___/\__\___| \_/ \___|    |_|\___|_|  |_|  \__,_|\__,_|\__,_|___/ |_| |_|_|_|\__,_|".rjust(25)+\
-           "\n\n"+\
-           "*"*140+\
-           "\n"+"1)Add/Remove/Show Players".rjust(55)+\
-           "\n"+"2)Settings".rjust(55)+\
-           "\n"+"3)Play Game".rjust(55)+\
-           "\n"+"4)Ranking".rjust(55)+\
-           "\n"+"5)Reports".rjust(55)+\
-           "\n"+"6)Exit".rjust(55)
-
-    menu01 = "\n\n\n"+"*"*140+"\n"+\
-           "\n____".rjust(34)+"____".rjust(3)+"____".rjust(3)+"____".rjust(3)+"____".rjust(5)+"__".rjust(3)+\
-           "\n/ __ ) / __ ) / __ \ / __ \   / __ \ / /____ _ __  __ ___   _____ _____".rjust(33)+\
-           "\n/ __  |/ __  |/ / / // / / /  / /_/ // // __ `// / / // _ \ / ___// ___/".rjust(32)+\
-           "\n/ /_/ // /_/ // /_/ // /_/ /  / ____// // /_/ // /_/ //  __// /   (__  )".rjust(31)+\
-           "\n/_____//_____//_____//_____/  /_/    /_/ \__,_/ \__, / \___//_/   /____/".rjust(30)+\
-           "\n/____/".rjust(77)+"\n"+"\n"+\
-           "*"*140+"\n\n"+"1)New Human Player".rjust(57)+\
-             "\n2)New Boot".rjust(57)+\
-             "\n3)Show/Remove Players".rjust(57)+\
-             "\n4)Go back".rjust(57)
-
-    menu11 = "\n\n\n"+"*"*140+"\n"+\
-    "\n_   __                  __  __                                   ____   __".rjust(22)+\
-    "\n/ | / /___  _      __   / / / /__  __ ____ ___   ____ _ ____     / __ \ / /____ _ __  __ ___   _____".rjust(21)+\
-    "\n/  |/ // _ \| | /| / /  / /_/ // / / // __ `__ \ / __ `// __ \   / /_/ // // __ `// / / // _ \ / ___/".rjust(20)+\
-    "\n/ /|  //  __/| |/ |/ /  / __  // /_/ // / / / / // /_/ // / / /  / ____// // /_/ // /_/ //  __// /".rjust(19)+\
-    "\n/_/ |_/ \___/ |__/|__/  /_/ /_/ \__,_//_/ /_/ /_/ \__,_//_/ /_/  /_/    /_/ \__,_/ \__, / \___//_/".rjust(18)+\
-    "\n/____/".rjust(100)+\
-    "\n\n\n"+"*"*140+"\n\n"
-
-    flg00=True
-    flg01=False
-    flg02=False
-    flg03=False
-    flg04=False
-    flg05=False
-
-    while option.upper()=="EXIT":
-        while flg00:
-            option = input(menu00+"\nOption: ")
-            while option not in [1,2,3,4,5,6]:
-                input("The option given must be between 1 and 6!".rjust(55)+"\nPress any key to continue".rjust(55))
-                option = input(menu01 +"\nOption: ".rjust(55))
-            else:
-                option = int(option)
-                if option == 1:
-                    flg00 = False
-                    flg01 = True
-                elif option == 2:
-                    flg00 = False
-                    flg02 = True
-                elif option == 3:
-                    flg00 = False
-                    flg03 = True
-                elif option == 4:
-                    flg00 = False
-                    flg04 = True
-                elif option == 5:
-                    flg00 = False
-                    flg05 = True
-                elif option == 6:
-                    return
-        while flg01:
-            option = input(menu01+"Option: ".rjust(57))
-            while option not in [1,2,3,4]:
-                option = input(menu01 + "Option: ".rjust(57))
-            else:
-                option = int(option)
-                if option == 1:
-                    # new human player
-                    print()
-                elif option == 2:
-                    # new bot player
-                    print()
-                elif option == 3:
-                    # show/remove players
-                    print()
-                elif option == 4:
-                    # go back
-                    flg01 = False
-                    flg00 = True
+mainprogram()
