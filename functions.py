@@ -12,6 +12,8 @@ connection = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
+cur = connection.cursor()
+
 
 def addplayerdb():
     while True:
@@ -34,7 +36,7 @@ def addplayerdb():
                 if not new_player_id[:8].isdigit() or not new_player_id[8:9].isalpha():
                     print(
                         "Invalid input. The first eight characters need to be only numbers and the last one a letter.")
-                with connection.cursor() as cursor:
+                with cur.cursor() as cursor:
                     sql = "SELECT player_id FROM player WHERE player_id = %s"
                     cursor.execute(sql, (new_player_id,))
                     result = cursor.fetchone()
@@ -48,11 +50,11 @@ def addplayerdb():
 
             if answer1 == "y":
                 try:
-                    with connection.cursor() as cursor:
+                    with cur.cursor() as cursor:
                         cursor.execute(
                             "INSERT INTO player (player_name, player_risk, player_id, human) VALUES (%s, %s, %s, %s)",
                             (new_player_name, new_player_behaviour, new_player_id, 1))
-                        connection.commit()
+                        cur.commit()
                         print("Player added successfully!")
                 except Exception as e:
                     print(f"An error occurred: {e}")
@@ -74,11 +76,11 @@ def addplayerdb():
 
             if answer2 == "y":
                 try:
-                    with connection.cursor() as cursor:
+                    with cur.cursor() as cursor:
                         cursor.execute(
                             "INSERT INTO player (player_name, player_risk, player_id, human) VALUES (%s, %s, %s, %s)",
                             (new_player_name, new_player_behaviour, new_player_id, 0))
-                        connection.commit()
+                        cur.commit()
                         print("Player added successfully!")
                 except Exception as e:
                     print(f"An error occurred: {e}")
@@ -91,10 +93,10 @@ def addplayerdb():
 
 def delete_player(player_id):
     try:
-        with connection.cursor() as cursor:
+        with cur.cursor() as cursor:
             sql = f"DELETE FROM player WHERE player_id = {player_id}"
             cursor.execute(sql)
-            connection.commit()
+            cur.commit()
             print(f"Player with ID {player_id} has been deleted.")
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -106,7 +108,7 @@ def showplayersdb():
     while True:
         menu = "\n\n\n" + "*" * 140 + "\n\n" + "\tPlayers ID\t\t\t\tPlayers name\t\t\t\tPlayers behaviour\n\n"
         try:
-            with connection.cursor() as cursor:
+            with cur.cursor() as cursor:
                 sql = f"SELECT player_id, player_name, player_risk FROM player LIMIT {limit} OFFSET {offset}"
                 cursor.execute(sql)
                 result = cursor.fetchall()
@@ -137,18 +139,18 @@ def showplayersdb():
             print("- option selected")
         elif option[:2].lower() == "del" and (len(option) == 13 and option[3:11].isdigit() and option[11:12].isalpha()):
             player_id = int(option[3:11])
-            with connection.cursor() as cursor:
+            with cur.cursor() as cursor:
                 cursor.execute(f"SELECT player_id, player_name FROM player WHERE player_id = {player_id}")
                 result = cursor.fetchone()
                 if result:
                     player_name = result["player_name"]
-                    delete_player = input(
+                    option1 = input(
                         f"Are you sure you want to delete this player? y/n\n{player_id}\n{player_name}\nOption: ")
-                    if delete_player.lower() == "y":
+                    if option1.lower() == "y":
                         delete_player(player_id)
                         input("Player successfully deleted!\nPress any key to continue")
                         continue
-                    if delete_player.lower() == "n":
+                    if option1.lower() == "n":
                         input("Player not deleted!\nPress any key to continue")
 
         elif option.lower() == "exit":
@@ -163,7 +165,7 @@ def setplayers():
         while flg_1:
             add_player = input("Player ID to add: ")
             try:
-                with connection.cursor() as cursor:
+                with cur.cursor() as cursor:
                     sql = f"SELECT player_id, player_name, player_risk, human FROM player WHERE player_id = '{add_player}'"
                     cursor.execute(sql)
                     result = cursor.fetchone()
@@ -184,9 +186,9 @@ def setplayers():
                                                    "human": human,
                                                    "points": 40, "bank": False}
                         input("Player successfully added!\nPress any key to continue")
-                        with connection.cursor() as cursor:
+                        with cur.cursor() as cursor:
                             cursor.execute("UPDATE cardgame SET players = players + 1")
-                            connection.commit()
+                            cur.commit()
                     else:
                         input(
                             "Player with the given ID not found! Please make sure the ID is correct\nPress any key to continue")
@@ -325,17 +327,17 @@ def mainprogram():
                     setplayers()
                 elif option == 2:
                     # set cards deck function
-                    setDeck()
+                    setdeck()
                 elif option == 3:
                     # set max rounds function
-                    setMaxRounds()
+                    setmaxrounds()
                 elif option == 4:
                     # go back
                     flg02 = False
                     flg00 = True
 
         while flg03:
-            with connection.cursor() as cursor:
+            with cur.cursor() as cursor:
                 cursor.execute("SELECT players FROM cardgame WHERE players >= 2")
                 result = cursor.fetchone()
                 if result is None:
@@ -343,10 +345,10 @@ def mainprogram():
                     flg03 = False
                     flg00 = True
                 else:
-                    playGame()
+                    playgame()
 
 
-def setDeck():
+def setdeck():
     option = input("Which deck you want to use in the game?\nspn = Spanish deck or eng = English deck?\nOption: ")
     while not option.lower() == "spn" or option.lower() == "eng":
         input("Please choose between spn/eng\nPress any key to continue")
@@ -365,7 +367,7 @@ def setDeck():
     return
 
 
-def setMaxRounds():
+def setmaxrounds():
     while True:
         option = input("How many rounds do you want as maximum in the game?\nWrite none if you dont want a maximum"
                        "\nOption: ")
@@ -382,25 +384,25 @@ def setMaxRounds():
             return
 
 
-def playGame():
+def playgame():
     while True:
         # setDeckGame() to prepare the deck for the game
-        setDeckGame()
+        setdeckgame()
         # listAllPlayers to list all players into a custom display
-        listAllPlayers()
+        listallplayers()
         input("This is the first round where the order of cards given to each player will be decided"
               "\nPress any key to continue")
         # firstRound() to decide the order in which the cards will be given to the players
-        firstRound()
+        firstround()
 
 
-def firstRound():
-    with connection.cursor() as cursor:
+def firstround():
+    with cur.cursor() as cursor:
         for player_id, player_data in players_dict.items():
             sql = "INSERT INTO player_game_round (round_num, player_id, is_bank, bet_points, starting_points) VALUES (%s, %s, %s, %s, %s)"
             is_bank = 1 if player_data["bank"] else 0
             cursor.execute(sql, (1, player_id, is_bank, player_data["bet"], player_data["points"]))
-        connection.commit()
+        cur.commit()
 
     players_cards = {player_id: [] for player_id in players_dict.items()}
 
@@ -418,10 +420,11 @@ def firstRound():
     global players_cards, playersOrder
     return players_cards, playersOrder
 
-def setDeckGame():
+
+def setdeckgame():
     # game_settings = {"roundlimit":{"active":True,"rounds":5},"deck":{"spn_cards":True,"eng_cards":False}}
     if game_settings["deck"]["spn_cards"] == True and game_settings["deck"]["eng_cards"] == False:
-        with connection.cursor() as cursor:
+        with cur.cursor() as cursor:
             # Select all rows from the 'card' table where 'deck_id' equals 'spn'
             sql = "SELECT card_id, card_name, card_value, card_priority, card_real_value FROM card WHERE deck_id = 'spn'"
             cursor.execute(sql)
@@ -440,7 +443,7 @@ def setDeckGame():
     return deck_game
 
 
-def listAllPlayers():
+def listallplayers():
     display_players = "\n\n\n" + "*" * 140 + "\n\n\tName\t\t\tPoints\t\tBehaviour\t\tBet\t\tBank\n\n"
     for player_id, player_info in players_dict.items():
         display_players += "\n\n\t{}\t\t\t{}\t\t{}\t\t{}\t\t{}\n\n".format(
@@ -450,7 +453,8 @@ def listAllPlayers():
     print(display_players)
     return display_players
 
-def cardsBetRepartition():
+
+def cardsbetrepartition():
     for player_id in players_dict:
         if players_dict[player_id]["human"] == True or players_dict[player_id]["human"] == 1:
             # the player is human, so ask them to make a bet
@@ -467,10 +471,11 @@ def cardsBetRepartition():
                 likelihood = 0.7
             if random.random() < likelihood:
                 # make a high bet
-                make_bet = players_dict[player_id]["points"]/2 + random.randint(0, players_dict[player_id]["points"]/4)
+                make_bet = players_dict[player_id]["points"] / 2 + random.randint(0,
+                                                                                  players_dict[player_id]["points"] / 4)
             else:
                 # make a low bet
-                make_bet = random.randint(0, players_dict[player_id]["points"]/2)
+                make_bet = random.randint(0, players_dict[player_id]["points"] / 2)
             players_dict[player_id]["bet"] = int(make_bet)
 
     for player in playersOrder:
@@ -489,7 +494,7 @@ def cardsBetRepartition():
             card_id = random.choice([card_id for card_id in deck_game if card_id not in players_cards[player]])
             players_cards[player].append(card_id)
             card_count += deck_game[card_id]["realvalue"]
-        players_dict[player]["points"] -= players_dict[player]["bet"]
+            players_dict[player]["points"] -= players_dict[player]["bet"]
         else:
             # the player is human
             card_count = 0
@@ -507,3 +512,4 @@ def cardsBetRepartition():
             else:
                 break
         players_dict[player]["points"] -= players_dict[player]["bet"]
+    return
